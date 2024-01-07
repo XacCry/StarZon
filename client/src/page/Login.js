@@ -1,13 +1,21 @@
-import React from 'react';
 import { NavLink} from 'react-router-dom'
 import '../page/css/Login.css';
 import bgimage from "../assests/img/bg_login.png"
 import axios from 'axios'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Validation from '../function/loginValidation'
 
+//Redux
+import { useDispatch } from 'react-redux';
+
+const re = () => {
+  window.location.reload(false);
+} 
+
 const Login = () => {
+
+  const dispatch = useDispatch()
 
   const [values, setValues] = useState({        
     email: '',        
@@ -19,27 +27,42 @@ const Login = () => {
   const [backendError, setBackendError] = useState([])
 
   const handleInput = (event) => {        
-    setValues(prev => ({...prev, [event.target.name]: [event.target.value]}))    
+    setValues(prev => ({...prev, [event.target.name]: event.target.value}))    
   }
 
   const handleSubmit =(event) => {        
     event.preventDefault();        
     const err = Validation(values); setErrors(err);        
     if(err.email === "" && err.password === "") {            
-      axios.post('localhost:3001/login', values)            
+      axios.post('http://localhost:3001/login', values)            
       .then(res => {                
         if(res.data.errors) {                    
           setBackendError(res.data.errors);                
         } else {                    
           setBackendError([]);                    
-          if(res.data === "Success") {                        
-            navigate('/home');                    
-          } else {                        
-            alert("No record existed");                    
+          if(res.data.token) {   
+            alert("Login Success")  
+            dispatch({
+              type:'LOGIN',
+              payload: {
+                token: res.data.token,
+                email: res.data.payload.user.email,
+                phone: res.data.payload.user.phone
+              }})   
+            localStorage.setItem('token', res.data.token)
+                      
+            navigate('/');  re();
+            return                  
+          } else {                    
+            alert("No record existed");    
+            return                
           }                
         }                            
       })            
-      .catch(err => console.log(err));        
+      .catch(err => {
+        console.log(err)
+        alert(err.response.data)
+      });        
     }    
   }
 
@@ -56,17 +79,19 @@ const Login = () => {
           <div className="title">
             <h1>Login</h1>
           </div>
-          <form>
+          <form action="" onSubmit={handleSubmit}>
             <div className="username">
               <label htmlFor="username">USERNAME</label>
               <div className="input-login">
-                <input type="text" id="username" placeholder='Enter email or Mobile phone *'/>
+                <input type="text" name="email" placeholder='Enter email or Mobile phone *' onChange={handleInput} style={{color:"black"}}/>
+                {errors.email && <span className='text-danger' style={{color:"red", fontSize:"10px"}}> {errors.email}</span>}
               </div>
             </div>
             <div className="password">
               <label htmlFor="password">PASSWORD</label>
               <div className="input-login">
-              <input type="password" id="password" placeholder='Enter password *'/>
+              <input type="password" name="password" placeholder='Enter password *' onChange={handleInput} style={{color:"black"}}/>
+              {errors.password && <span className='text-danger' style={{color:"red", fontSize:"10px"}}> {errors.password}</span>}
               </div>
             </div>
             <div className="sing-up">

@@ -2,10 +2,16 @@ import React from 'react'
 import './Order.css'
 import Axios from 'axios'
 import { useState, useEffect } from 'react'
+import {useSelector} from "react-redux"
 
 function Food () {
 
   const [menuList,setMenuList] = useState([]);
+  const {user} = useSelector((state)=> ({...state}))
+  const [values, setValues] = useState({
+    userId: '',
+    itemId: ''
+  })
 
   useEffect(() => {
     fetchMenu();
@@ -20,6 +26,48 @@ function Food () {
     });
   };
 
+  const addToCart = (itemId) => {
+    const userId = user.userID;
+    const cartItem = {
+      userId: userId,
+      itemId: itemId,
+      quantity: 1
+    };
+    console.log(userId)
+    console.log(itemId)
+    // Check if the item already exists in the cart
+    Axios.get(`http://localhost:3001/cart1?userId=${userId}&itemId=${itemId}`)
+    .then((response) => {
+      console.log(response.data.length)
+      if (response.data.length > 0) {
+        // Item already exists in the cart, update the quantity
+        const item = response.data[0].quantity;
+        //console.log(item);
+        cartItem.quantity = item + 1;
+        Axios.put(`http://localhost:3001/cart1`, cartItem)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      } else {
+        // Item does not exist in the cart, add it
+        // var c = cartItem;
+        // console.log(c)
+        Axios.post('http://localhost:3001/cart1', cartItem)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  };
   
   return (
     <div className='py-3'>
@@ -39,7 +87,7 @@ function Food () {
                       </div>
                       <div className="card-footer">
                         <p className="card-price">{val.order_price} Bath</p>
-                        <button>Add item</button>
+                        <button onClick={ () => {alert("Order Added"); addToCart(val.order_id);} }>Add item</button>
                       </div>
                     </div>
                   </div>

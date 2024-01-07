@@ -36,7 +36,7 @@ body {
   position: absolute;
   background-color: #fff;
   width: 744px;
-  height: 400px;
+  height: fit-content;
   border-radius: 30px;
   box-shadow: rgba(0, 0, 0, 0.45) 0px 5px 15px;
   padding: 24px;

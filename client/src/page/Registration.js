@@ -1,7 +1,6 @@
-import React from 'react'
 import { NavLink} from 'react-router-dom'
 import '../page/css/Registration.css'
-import {useState} from 'react'
+import React, {useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Validation from '../function/registerValidation'
 import axios from 'axios'
@@ -18,17 +17,23 @@ const Registration = () => {
   const navigate = useNavigate();    
   const [errors, setErrors] = useState({})    
   const handleInput = (event) => {        
-    setValues(prev => ({...prev, [event.target.name]: [event.target.value]}))    
+    setValues(prev => ({...prev, [event.target.name]: event.target.value}))    
   }    
 
   const handleSubmit = (event) => {        
     event.preventDefault();        
     const err = Validation(values); setErrors(err);         
-    if(err.email === "" && err.mobileNumber === "" && err.password === "") {            
-      axios.post('localhost:3001/register', values)            
-      .then(res => {                
-        navigate('/login');            })            
-        .catch(err => console.log(err));        
+    if(err.email === "" && err.mobileNumber === "" && err.password === "") {      
+      console.log(values)     
+      axios.post('http://localhost:3001/register', values)            
+      .then(res => {    
+        alert("Registed Success")            
+        navigate('/login');            
+      })            
+        .catch(err => {
+          console.log(err)
+          alert(err.response.data)
+        })      
     }    
   }
 
@@ -52,15 +57,15 @@ const Registration = () => {
               <div className="email">
                 <label htmlFor="email">EMAIL ID</label>
                 <div className="input-login">
-                  <input type="text" name="email" placeholder='Enter Email ID' onChange={handleInput}/>
-                  {errors.email && <span className='text-danger'> {errors.email}</span>}
+                  <input type="text" name="email" placeholder='Enter Email ID' onChange={handleInput} style={{color:'black'}}/>
+                  {errors.email && <span className='text-danger' style={{color:"red", fontSize:"12px"}}> {errors.email}</span>}
                 </div>
               </div>
               <div className="mnumber">
                 <label htmlFor="mnumber">MOBILE NUMBER</label>
                 <div className="input-login">
-                <input type="number" name="mobileNumber" placeholder='Enter Mobile Number *' onChange={handleInput}/>
-                {errors.mobileNumber && <span className='text-danger'> {errors.mobileNumber}</span>}
+                <input type="number" name="mobileNumber" placeholder='Enter Mobile Number *' onChange={handleInput} style={{color:'black'}}/>
+                {errors.mobileNumber && <span className='text-danger' style={{color:"red", fontSize:"12px"}}> {errors.mobileNumber}</span>}
                 </div>
               </div>
             </div>
@@ -68,15 +73,15 @@ const Registration = () => {
               <div className="rpassword">
                 <label htmlFor="rpassword">CREATE PASSWORD</label>
                 <div className="input-login">
-                <input type="password" name="password" placeholder='Enter Password *' onChange={handleInput}/>
-                {errors.password && <span className='text-danger'> {errors.password}</span>}
+                <input type="password" name="password" placeholder='Enter Password *' onChange={handleInput} style={{color:'black'}}/>
+                {errors.password && <span className='text-danger' style={{color:"red", fontSize:"12px"}}> {errors.password}</span>}
                 </div>
               </div>
               <div className="crpassword">
                 <label htmlFor="crpassword">CONFIRM PASSWORD</label>
                 <div className="input-login">
-                <input type="password" name="cfPassword" placeholder='Re-enter password *' onChange={handleInput}/>
-                {errors.cfPassword && <span className='text-danger'> {errors.cfPassword}</span>}
+                <input type="password" name="cfPassword" placeholder='Re-enter password *' onChange={handleInput} style={{color:'black'}}/>
+                {errors.cfPassword && <span className='text-danger' style={{color:"red", fontSize:"12px"}}> {errors.cfPassword}</span>}
                 </div>
               </div>
             </div>

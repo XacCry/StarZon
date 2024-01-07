@@ -3,16 +3,15 @@ import { BsInstagram, BsTwitter } from 'react-icons/bs'
 import { CgFacebook } from "react-icons/cg"
 import { Link } from 'react-router-dom'
 import logo from "../assests/img/logo.png"
-import appstoreiOSImage from "../assests/img/appstoreiOS.png"
-import appstoreAndroidImage from "../assests/img/appstoreAndroid.png"
+
 
 const Footer = () => {
     return (
         <div className='bg-[#0e382c] w-full py-5 hidden sm:block'>
             <div className='p-8 px-4 sm:px-0 md:w-4/5 m-auto relative mt-3 '>
-                <div className='grid grid-cols-6'>
+                <div className='grid grid-cols-5 justify-items-center'>
                     <div className='min-w-[50px]'>
-                        <img src={logo} className="w-16" alt=''/>
+                        <img src={logo} className="w-20" alt=''/>
                     </div>
                     <div className='flex flex-col text-white'>
                         <Link to={""} className="font-bold text-lg mb-4">AboutUS</Link>
@@ -38,19 +37,12 @@ const Footer = () => {
                     <div className='flex flex-col text-white'>
                         <Link to={""} className="font-bold text-lg mb-4">SOCIAL MEDIA</Link>
                         <div className='flex gap-5 text-2xl'>
-                            <a href='https://www.instagram.com/starbucksindia/'><BsInstagram /></a>
-                            <a href='https://www.facebook.com/starbucksindia'><CgFacebook /></a>
-                            <a href='https://twitter.com/starbucksindia'><BsTwitter /></a>
+                            <a href='https://www.instagram.com/starzoncafe_shop/'><BsInstagram /></a>
+                            <a href=''><CgFacebook /></a>
+                            <a href=''><BsTwitter /></a>
                         </div>
                     </div>
-                    <div className='flex flex-col gap-5'>
-                        <a href='https://apps.apple.com/in/app/starbucks-india/id1210203958'>
-                            <img src={appstoreiOSImage} alt=''/>
-                        </a>
-                        <a href='https://play.google.com/store/apps/details?id=com.starbucks.in'>
-                            <img src={appstoreAndroidImage} alt=''/>
-                        </a>
-                    </div>
+                    
                 </div>
 
                 <div className='border-t border-solid mt-7 text-gray-100 py-3 flex justify-between'>
@@ -60,7 +52,7 @@ const Footer = () => {
                             <Link to={""} className="pr-3 pl-3 border-r">Terms of Use</Link>
                             <Link to={""} className="pr-3 pl-3">Contact Us</Link>
                         </div>
-                        <p className='text-xs'>© 2023 Starbucks Coffee Company. All rights reserved.</p>
+                        <p className='text-xs'>© 2023 Starzon Coffee Company. All rights reserved.</p>
                 </div>
             </div>
 

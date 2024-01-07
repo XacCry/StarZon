@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { HandcraftedCurations } from '../database'
 import slideImage1 from "../assests/img/Barista_Pride_ca8aec571f.png"
 import slideImage2 from "../assests/img/Group_1249_39083973b4.png"
@@ -14,9 +14,13 @@ import Coffee_cherry_spices from "../assests/img/Coffee_cherry_spices_9de46c3e1b
 import Axios from 'axios'
 import { useState, useEffect } from 'react'
 
+//Redux
+import {useSelector} from "react-redux"
+
 function Home () {
 
   const [menuList,setMenuList] = useState([]);
+  const {user} = useSelector((state)=> ({...state}))
 
   useEffect(() => {
     fetchMenu();
@@ -36,8 +40,13 @@ function Home () {
       <div className='bg-[#1e3932] py-2 sm:py-6'>
         <div className=' text-white  text-lg tracking-wide w-full'>
           <div className='px-4  sm:px-0 md:w-4/5 m-auto flex justify-between items-center gap-5'>
-            <p className='text-sm sm:text-xl max-w-md sm:max-w-xl'>A world of rewards awaits you! Sign up now.</p>
-            <Link to={"/login"} className='text-sm border-2 px-2 py-1 rounded-full whitespace-nowrap'>Sing up</Link>
+            {!user && <>
+              <p className='text-sm sm:text-xl max-w-md sm:max-w-xl'>A world of rewards awaits you! Sign up now.</p>
+              <Link to={"/login"} className='text-sm border-2 px-2 py-1 rounded-full whitespace-nowrap'>Sign up</Link>
+            </>}
+            {user && <>
+              <p className='text-sm sm:text-xl max-w-md sm:max-w-xl'>Welcome To Starzon Cafe</p>
+            </>}
           </div>
         </div>
       </div>
@@ -47,16 +56,30 @@ function Home () {
         <div className='px-4   sm:px-0 md:w-4/5 m-auto'>
           <h1 className='text-[#1e3932] text-2xl font-bold mb-4'>Handcrafted Curations</h1>
           <div className='flex justify-flexstart space-x-[100px] items-center text-center flex-wrap'>
-            {
-              HandcraftedCurations.map((el, index) => {
-                return (
-                  <Link to={el.link} className="flex justify-center items-center flex-col" key={el.title + index}>
-                    <img src={el.img} className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full hover:border-2 border-green-600 border-solid m-1" alt=''/>
-                    <p className='font-medium text-sm whitespace-normal sm:whitespace-nowrap'>{el.title}</p>
-                  </Link>
-                )
-              })
-            }
+            {user && <>
+              {
+                HandcraftedCurations.map((el, index) => {
+                  return (
+                    <Link to={el.link} className="flex justify-center items-center flex-col" key={el.title + index}>
+                      <img src={el.img} className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full hover:border-2 border-green-600 border-solid m-1" alt=''/>
+                      <p className='font-medium text-sm whitespace-normal sm:whitespace-nowrap'>{el.title}</p>
+                    </Link>
+                  )
+                })
+              }
+            </>}
+            {!user && <>
+              {
+                HandcraftedCurations.map((el, index) => {
+                  return (
+                    <Link to={"/login"} className="flex justify-center items-center flex-col" key={el.title + index}>
+                      <img src={el.img} className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full hover:border-2 border-green-600 border-solid m-1" alt=''/>
+                      <p className='font-medium text-sm whitespace-normal sm:whitespace-nowrap'>{el.title}</p>
+                    </Link>
+                  )
+                })
+              }
+            </>}
           </div>
         </div>
       </div>
@@ -81,7 +104,6 @@ function Home () {
                       </div>
                       <div className='flex justify-between font-semibold my-2'>
                         <p>฿ <span>{val.order_price}</span></p>
-                        <button className='text-white bg-[#00754a] hover:bg-[#1e3932] shadow-[0 4px 15px #a3a3a3ad] py-1 px-5 rounded-full'>Add Item</button>
                       </div>
                     </div>
                   )
@@ -92,9 +114,6 @@ function Home () {
           </div>
         </div>
       </div>
-
-
-
 
       <div className='bg-white py-14'>
 
@@ -182,7 +201,6 @@ function Home () {
                       <p className='my-5 text-xs text-gray-500'>{el.desc}</p>
                       <div className='flex justify-between font-semibold my-2'>
                         <p>฿ <span>{el.price}</span></p>
-                        <button className='text-white bg-[#00754a] hover:bg-[#1e3932] py-1 px-5 rounded-full'>Add Item</button>
                       </div>
                     </div>
 
@@ -194,15 +212,14 @@ function Home () {
         </div>
       </div>
 
-
       {/* Learn more about the world of coffee! */}
       <section className=''>
         <div className='p-8 px-4 sm:px-0 md:w-4/5 m-auto relative mt-3'>
           <div className='flex  items-center w-full justify-between '>
             <h1 className='text-[#1e3932] text-2xl font-bold m-0'>Learn more about the world of coffee!</h1>
-            <button className='text-green-800 font-semibold m-0'>Discover More</button>
+            <NavLink to={"/blogs"}><button className='text-green-800 font-semibold m-0'>Discover More</button></NavLink>
           </div>
-
+          <NavLink to="/blogs1">
           <div className='h-96 w-full my-9 rounded-md overflow-hidden relative cursor-pointer'>
             <img src={Coffee_cherry_spices} className="h-full w-full object-cover" alt=''/>
             <div className='h-full bg-black bg-opacity-40 hover:bg-opacity-70 w-full absolute top-0 transition-all p-5 flex flex-col justify-between'>
@@ -214,13 +231,9 @@ function Home () {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className='flex justify-center sm:hidden'>
-          <button className='bg-black text-white font-bold px-3 py-1 rounded-full'>Discover More</button>
+          </NavLink>
         </div>
       </section>
-
 
     </>
   )
